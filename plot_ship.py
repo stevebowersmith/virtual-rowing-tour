@@ -9,7 +9,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import shapely
 
-
 # copy in coordinates from kml file by hand
 way_points=[-3.410951578878632,50.61226419338077,
             -3.408957782258618,50.60897268488223,
@@ -88,49 +87,36 @@ lon_la_gomera=-17.2194
 lat_boat=lat_exmouth
 lon_boat=lon_exmouth
 
-#define map extent
-extent = [-20, 2.5, 25, 52.5]
+extent1 = [-20, 2.5, 25, 52.5]
 extent2 = [-6, -2.5, 47.5, 51]
 
-#create figure
 fig = plt.figure(figsize=(10, 8))
 fig.suptitle('Exmouth to La Gomera')
 
-ax = fig.add_subplot(1, 2, 1, projection=ccrs.PlateCarree())
-
 rivers_10m = cfeature.NaturalEarthFeature('physical', 'rivers_lake_centerlines', '10m')
 land_10m = cfeature.NaturalEarthFeature('physical', 'land', '10m', edgecolor='face', facecolor=cfeature.COLORS['land'])
-#pop_10m=cfeature.NaturalEarthFeature('cultural','populated_places','10m',edgecolor='face', facecolor='red')
-
-ax.set_extent(extent, crs=ccrs.PlateCarree())
-#ax.coastlines(resolution='50m')
-ax.add_feature(land_10m)
-#ax.add_feature(pop_10m)
-#ax.add_feature(rivers_10m, facecolor='None', edgecolor='b', alpha=0.5)
-#ax.add_feature(cfeature.BORDERS, linestyle=':')
 
 lon_formatter = LongitudeFormatter(zero_direction_label=True)
 lat_formatter = LatitudeFormatter()
-ax.set_xticks([-20,-15,-10,-5, 0, 5])
-ax.xaxis.set_major_formatter(lon_formatter)
-ax.set_yticks([25,30,35,40,45,50])
-ax.yaxis.set_major_formatter(lat_formatter)
-ax.plot(lon_exmouth, lat_exmouth, marker='o', color='blue', markersize=4, alpha=0.7, transform=ccrs.PlateCarree())
-ax.plot(lon_la_gomera, lat_la_gomera, marker='o', color='blue', markersize=4, alpha=0.7, transform=ccrs.PlateCarree())
-ax.plot(lon_route,lat_route, ':',transform=ccrs.PlateCarree())
-ax.plot(lon_boat, lat_boat, marker='o', color='red', markersize=8, alpha=0.7, transform=ccrs.PlateCarree())
-ax.set_title('Expedition chart')
 
+ax1 = fig.add_subplot(1, 2, 1, projection=ccrs.PlateCarree())
+ax1.set_extent(extent1, crs=ccrs.PlateCarree())
+#ax1.coastlines(resolution='50m')
+ax1.add_feature(land_10m)
+#ax1.add_feature(pop_10m)
+#ax1.add_feature(rivers_10m, facecolor='None', edgecolor='b', alpha=0.5)
+ax1.set_xticks([-20,-15,-10,-5, 0, 5])
+ax1.xaxis.set_major_formatter(lon_formatter)
+ax1.set_yticks([25,30,35,40,45,50])
+ax1.yaxis.set_major_formatter(lat_formatter)
+ax1.plot(lon_exmouth, lat_exmouth, marker='o', color='blue', markersize=4, alpha=0.7, transform=ccrs.PlateCarree())
+ax1.plot(lon_la_gomera, lat_la_gomera, marker='o', color='blue', markersize=4, alpha=0.7, transform=ccrs.PlateCarree())
+ax1.plot(lon_route,lat_route, ':',transform=ccrs.PlateCarree())
+ax1.plot(lon_boat, lat_boat, marker='o', color='red', markersize=8, alpha=0.7, transform=ccrs.PlateCarree())
+ax1.set_title('Expedition chart')
 
 ax2 = fig.add_subplot(1, 2, 2, projection=ccrs.PlateCarree())
-#tiler = StamenTerrain()
-#mercator = tiler.crs
-#ax2.add_image(tiler, 6)
-#ax2.coastlines(resolution='10m')
 ax2.add_feature(land_10m)
-
-lon_formatter = LongitudeFormatter(zero_direction_label=True)
-lat_formatter = LatitudeFormatter()
 ax2.set_xticks([-20,-15,-10,-5, 0, 5])
 ax2.xaxis.set_major_formatter(lon_formatter)
 ax2.set_yticks([25,30,35,40,45,50])
@@ -142,6 +128,6 @@ ax2.plot(lon_boat, lat_boat, marker='o', color='red', markersize=8, alpha=0.7, t
 ax2.set_title('Chart of the day')
 ax2.set_extent(extent2)
 
-
-
-plt.show()
+#plt.show()
+plt.savefig("plots/Exmouth_RC_virtual_row_winter_2020--2021.pdf")
+plt.savefig("plots/Exmouth_RC_virtual_row_winter_2020--2021.png")
