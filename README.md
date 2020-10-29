@@ -13,3 +13,4 @@ Software requirements availble from
 https://www.anaconda.com
 
 conda install -c conda-forge cartopy
+conda install -c conda-forge fastkml
