@@ -4,6 +4,8 @@
 
 def kml2latlon(ifile):
 
+    """Read lon lat from kml file with single path (exported from google earth)"""
+    
     from fastkml import kml, geometry
 
     with open(ifile, 'rt') as myfile:
