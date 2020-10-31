@@ -40,11 +40,13 @@ def main():
 
     # Define start and finish
 
-    lat_exmouth = 50.62
-    lon_exmouth = -3.4137
+    lat_start = 50.62
+    lon_start = -3.4137
+    name_start = "Exmouth"
 
-    lat_la_gomera = 28.1033
-    lon_la_gomera = -17.2194
+    lat_finish = 28.1033
+    lon_finish = -17.2194
+    name_finish = "La Gomera"
 
     # read planned route from kml file
 
@@ -53,8 +55,11 @@ def main():
 
     lat_route, lon_route = kml2latlon(ifile_kml)
 
-    lon_route.append(lon_la_gomera)
-    lat_route.append(lat_la_gomera)
+    lon_route.insert(0, lon_start)
+    lat_route.insert(0, lat_start)
+
+    lon_route.append(lon_finish)
+    lat_route.append(lat_finish)
 
     # read traveled distance in m 
     distance = read_logbook("log/rowing.log",
@@ -63,8 +68,10 @@ def main():
 
     # Define position of boat
 
-    lat_boat = lat_exmouth
-    lon_boat = lon_exmouth
+    lat_boat = lat_start
+    lon_boat = lon_start
+
+    # lat_boat, lon_boat = travel(distance,lat_route,lon_route)
 
     # Create plot
 
@@ -93,9 +100,9 @@ def main():
     ax1.xaxis.set_major_formatter(lon_formatter)
     ax1.set_yticks([25, 30, 35, 40, 45, 50])
     ax1.yaxis.set_major_formatter(lat_formatter)
-    ax1.plot(lon_exmouth, lat_exmouth, marker='o', color='blue',
+    ax1.plot(lon_start, lat_start, marker='o', color='blue',
              markersize=4, alpha=0.7, transform=ccrs.PlateCarree())
-    ax1.plot(lon_la_gomera, lat_la_gomera, marker='o', color='blue',
+    ax1.plot(lon_finish, lat_finish, marker='o', color='blue',
              markersize=4, alpha=0.7, transform=ccrs.PlateCarree())
     ax1.plot(lon_route, lat_route, ':', transform=ccrs.PlateCarree())
     ax1.plot(lon_boat, lat_boat, marker='o', color='red',
@@ -108,9 +115,9 @@ def main():
     ax2.xaxis.set_major_formatter(lon_formatter)
     ax2.set_yticks([25, 30, 35, 40, 45, 50])
     ax2.yaxis.set_major_formatter(lat_formatter)
-    ax2.plot(lon_exmouth, lat_exmouth, marker='o', color='blue',
+    ax2.plot(lon_start, lat_start, marker='o', color='blue',
              markersize=4, alpha=0.7, transform=ccrs.PlateCarree())
-    ax2.plot(lon_la_gomera, lat_la_gomera, marker='o', color='blue',
+    ax2.plot(lon_finish, lat_finish, marker='o', color='blue',
              markersize=4, alpha=0.7, transform=ccrs.PlateCarree())
     ax2.plot(lon_route, lat_route, ':', transform=ccrs.PlateCarree())
     ax2.plot(lon_boat, lat_boat, marker='o', color='red',
