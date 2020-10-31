@@ -6,17 +6,19 @@ def kml2latlon(ifile):
 
     from fastkml import kml, geometry
 
-    with open(ifile, 'rt', encoding="utf-8") as myfile:
+    with open(ifile, 'rt') as myfile:
         doc = myfile.read()
     k = kml.KML()
-    k.from_string(doc.encode('utf-8'))
-    features = list(k.features())
-    g = list(features[0].features())[0].geometry
+    k.from_string(doc.encode("utf-8"))
+    f = list(k.features())
+    g = list(f[0].features())[0].geometry
+    
     lat = []
     lon = []
     for c in g.coords:
         lon.append(c[0])
         lat.append(c[1])
+
     return lat, lon
         
 def main():
