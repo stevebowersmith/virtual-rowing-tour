@@ -31,16 +31,12 @@ def read_logbook(ifile, startdate = None, enddate = None):
 
 def main():
 
-    import cartopy.crs as ccrs
-    import cartopy
-    import cartopy.feature as cfeature
-    from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
-    from cartopy.io.img_tiles import StamenTerrain
-    import numpy as np
     import matplotlib.pyplot as plt
-    import shapely
-    import sys
-    from fastkml import kml, geometry
+    
+    import cartopy.crs as ccrs
+    import cartopy.feature as cfeature
+    
+    from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 
     # Define start and finish
 
