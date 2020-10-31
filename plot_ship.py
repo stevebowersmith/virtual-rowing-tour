@@ -1,6 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+
+def kml2latlon(ifile):
+
+    from fastkml import kml, geometry
+
+    with open(ifile, 'rt', encoding="utf-8") as myfile:
+        doc = myfile.read()
+    k = kml.KML()
+    k.from_string(doc.encode('utf-8'))
+    features = list(k.features())
+    g = list(features[0].features())[0].geometry
+    lat = []
+    lon = []
+    for c in g.coords:
+        lon.append(c[0])
+        lat.append(c[1])
+    return lat, lon
         
 def main():
 
@@ -25,20 +42,11 @@ def main():
     
     # read planned route from kml file
         
-    ifile_kml = "route.kml"    
-    with open(ifile_kml, 'rt', encoding="utf-8") as myfile:
-        doc = myfile.read()
-    k = kml.KML()
-    k.from_string(doc.encode('utf-8'))
-    features = list(k.features())
-    f2 = list(features[0].features())
-    g = f2[0].geometry
-    lon_route = []
-    lat_route = []
-    for c in g.coords:
-        lon_route.append(c[0])
-        lat_route.append(c[1])
+    ifile_kml = "route.kml"
+    #ifile_kml = "shortcut.kml"
 
+    lat_route, lon_route = kml2latlon(ifile_kml)
+    
     lon_route.append(lon_la_gomera)
     lat_route.append(lat_la_gomera)
 
