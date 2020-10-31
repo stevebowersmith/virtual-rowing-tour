@@ -23,6 +23,11 @@ def kml2latlon(ifile):
 
     return lat, lon
 
+def read_logbook(ifile, startdate = None, enddate = None):
+    """ ToDo: Write reader for logbook to return distance in m rowed between start and end date"""
+    distance = 15000
+    return distance
+
 
 def main():
 
@@ -54,6 +59,11 @@ def main():
 
     lon_route.append(lon_la_gomera)
     lat_route.append(lat_la_gomera)
+
+    # read traveled distance in m 
+    distance = read_logbook("log/rowing.log",
+                            startdate = "2020-10-31",
+                            enddate = "2020-10-31") 
 
     # Define position of boat
 
