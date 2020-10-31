@@ -15,7 +15,6 @@ def main():
     import sys
     from fastkml import kml, geometry 
 
-    
     # Define start and finish
     
     lat_exmouth = 50.62
@@ -23,14 +22,9 @@ def main():
 
     lat_la_gomera = 28.1033 
     lon_la_gomera = -17.2194
-
     
     # read planned route from kml file
-    
-    # https://fastkml.readthedocs.io/en/latest/usage_guide.html
-    # https://medium.com/@wwaryan/the-definite-only-guide-to-fastkml-58b8e19b8454
-    # https://github.com/cleder/fastkml
-    
+        
     ifile_kml = "route.kml"    
     with open(ifile_kml, 'rt', encoding="utf-8") as myfile:
         doc = myfile.read()
@@ -48,12 +42,10 @@ def main():
     lon_route.append(lon_la_gomera)
     lat_route.append(lat_la_gomera)
 
-    
     # Define position of boat
     
     lat_boat=lat_exmouth
     lon_boat=lon_exmouth
-
 
     # Create plot
     
@@ -102,6 +94,6 @@ def main():
     #plt.savefig("plots/Exmouth_RC_virtual_row_winter_2020--2021.pdf")
     #plt.savefig("plots/Exmouth_RC_virtual_row_winter_2020--2021.png")
 
-    
+        
 if __name__ == "__main__":
     main()
