@@ -78,8 +78,8 @@ def main():
 
     # read planned route from kml file
 
-    ifile_kml = "route.kml"
-    # ifile_kml = "shortcut.kml"
+    ifile_kml = "routes/route.kml"
+    # ifile_kml = "routes/shortcut.kml"
 
     lat_route, lon_route = kml2latlon(ifile_kml)
 
