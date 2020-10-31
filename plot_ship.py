@@ -29,6 +29,34 @@ def read_logbook(ifile, startdate = None, enddate = None):
     return distance
 
 
+def travel(distance, lat_route, lon_route):
+    "ToDo: travel distance [m] along route and return position at destination"
+    import shapely
+    import numpy as np
+    from cartopy import geodesic
+    import sys
+
+    # total length of route
+    latlon = tuple(zip(lat_route, lon_route))
+    myGeod = geodesic.Geodesic(6378137.0,1 / 298.257223563)
+    shapelyObject = shapely.geometry.LineString(list(latlon))
+    # calculate length of path on ellipsoid
+    s = myGeod.geometry_length(np.array(shapelyObject.coords))
+
+    print("distance from start to finish is " + str(float(s)/1000.0) + " km" )
+
+    # ToDo:
+    #  - Check if parameters for geoid are consitent with google earth  
+    #  - Calulate distance from the start position to each way point along the route
+    #  - Find last passed way point by comparing distance of waypoint with travled distance and return lon / lat
+    #  - Refine resulution of route / distance between the waypoints to avoid jumps  
+    
+    lat_pos = -999
+    lon_pos = -888
+
+    return lat_pos, lon_pos
+
+
 def main():
 
     import matplotlib.pyplot as plt
@@ -71,7 +99,7 @@ def main():
     lat_boat = lat_start
     lon_boat = lon_start
 
-    # lat_boat, lon_boat = travel(distance,lat_route,lon_route)
+    lat_boat_test, lon_boat_test = travel(distance,lat_route,lon_route)
 
     # Create plot
 
