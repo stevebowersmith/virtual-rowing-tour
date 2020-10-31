@@ -1,4 +1,4 @@
-# erc_to_la_gomera_row
+# ERC to La Gomera Row
 
 # km log 
 
@@ -13,3 +13,5 @@ Software requirements availble from
 https://www.anaconda.com
 
 conda install -c conda-forge cartopy
+
+conda install -c conda-forge fastkml
