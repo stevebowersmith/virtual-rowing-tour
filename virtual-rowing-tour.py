@@ -27,7 +27,7 @@ def kml2latlon(ifile):
 def read_logbook(ifile, startdate=None, enddate=None):
     """ ToDo: Write reader for logbook to return distance in m
         rowed between start and end date"""
-    distance = 15000
+    distance = 218739
 
     return distance
 
@@ -82,23 +82,31 @@ def travel(distance, lat_route, lon_route):
             s_vec[n] = s
             s_sum[n] = s + s_sum[n-1]
 
-        print(n)
-        print(s_vec[n])
-        print(s_sum[n])
-        print ("----")
+        # print(n)
+        # print(s_vec[n])
+        # print(s_sum[n])
+        # print ("----")
+        
+    # Find last passed waypoint
+    lat_pos = lat_route[0]
+    lon_pos = lon_route[0]
+    for n in range(len(s_sum)):
+        if s_sum[n] > distance:
 
-    # ToDo: Find last passed way point by comparing distance of
-    #       waypoint with travled distance and return lon/lat
-
-
-    
-    # ToDo: Find additional stretch rowed once the last waypoint was passed
+            lat_pos = lat_route[n-1]
+            lon_pos = lon_route[n-1]
+            # distance traveled from last know position
+            res = distance - s_sum[n-1]
+            # print(n)
+            # print(res)
+            # print(distance)
+            break
+            
+    # ToDo: Correct position by travelling the distance res
+    #       from the last know position (lat_pos, lon_pps) 
 
     # ToDo: Quality control (Check if parameters for geoid are consitent
     #       with google earth, try different routes, ...)
-
-    lat_pos = -999
-    lon_pos = -888
 
     return lat_pos, lon_pos
 
@@ -112,12 +120,7 @@ def main():
 
     # Define start and finish
 
-    lat_start = 50.62
-    lon_start = -3.4137
     name_start = "Exmouth"
-
-    lat_finish = 28.1033
-    lon_finish = -17.2194
     name_finish = "La Gomera"
 
     # read planned route from kml file
@@ -127,11 +130,10 @@ def main():
 
     lat_route, lon_route = kml2latlon(ifile_kml)
 
-    lon_route.insert(0, lon_start)
-    lat_route.insert(0, lat_start)
-
-    lon_route.append(lon_finish)
-    lat_route.append(lat_finish)
+    lon_start = lon_route[0]
+    lat_start = lat_route[0]
+    lon_finish = lon_route[-1]
+    lat_finish = lat_route[-1]
 
     # read traveled distance in m
     distance = read_logbook("log/rowing.log",
@@ -140,10 +142,7 @@ def main():
 
     # Define position of boat
 
-    lat_boat = lat_start
-    lon_boat = lon_start
-
-    lat_boat_test, lon_boat_test = travel(distance, lat_route, lon_route)
+    lat_boat, lon_boat = travel(distance, lat_route, lon_route)
 
     # Create plot
 
@@ -197,9 +196,9 @@ def main():
     ax2.set_title('Chart of the day')
     ax2.set_extent(extent2)
 
-    plt.show()
-    # plt.savefig("plots/Exmouth_RC_virtual_row_winter_2020--2021.pdf")
-    # plt.savefig("plots/Exmouth_RC_virtual_row_winter_2020--2021.png")
+    #plt.show()
+    plt.savefig("plots/Exmouth_RC_virtual_row_winter_2020--2021.pdf")
+    plt.savefig("plots/Exmouth_RC_virtual_row_winter_2020--2021.png")
 
 
 if __name__ == "__main__":
