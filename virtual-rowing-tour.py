@@ -61,28 +61,37 @@ def travel(distance, lat_route, lon_route):
     print("distance from start to finish is " + str(float(s)/1000.0) + " km")
 
     # distance to each waypoint
-    s = 0.0     # distance for leg n-1 to n
-    s_vec = []  # distances for all legs
-    s_sum = []  # summed distances for all legs
+    
+    s = 0.0
+
+    s_vec = np.empty(len(lat_route))
+    s_vec[:] = np.NaN
+    
+    s_sum = np.empty(len(lat_route))
+    s_sum[:] = np.NaN
+    
     for n in range(len(lat_route)):
         if n == 0:
             s = 0.0
-            s_vec.append(s)
-            s_sum.append(s)
+            s_vec[n] = s
+            s_sum[n] = s
         else:
             # row leg from waypoint n-1 to n
             s = coords2d([lat_route[n-1], lat_route[n]],
                          [lon_route[n-1], lon_route[n]])
-            s_vec.append(s)
-            s_sum.append(s + s_sum[n-1])
-        # print(n)
-        # print(s_vec[n])
-        # print(s_sum[n])
-        # print ("----")
+            s_vec[n] = s
+            s_sum[n] = s + s_sum[n-1]
+
+        print(n)
+        print(s_vec[n])
+        print(s_sum[n])
+        print ("----")
 
     # ToDo: Find last passed way point by comparing distance of
     #       waypoint with travled distance and return lon/lat
 
+
+    
     # ToDo: Find additional stretch rowed once the last waypoint was passed
 
     # ToDo: Quality control (Check if parameters for geoid are consitent
