@@ -96,7 +96,7 @@ def travel(distance, lat_route, lon_route):
 
 def main():
 
-    import matplotlib.pyplot as plt   
+    import matplotlib.pyplot as plt
     import cartopy.crs as ccrs
     import cartopy.feature as cfeature
     from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
@@ -124,17 +124,17 @@ def main():
     lon_route.append(lon_finish)
     lat_route.append(lat_finish)
 
-    # read traveled distance in m 
+    # read traveled distance in m
     distance = read_logbook("log/rowing.log",
-                            startdate = "2020-10-31",
-                            enddate = "2020-10-31") 
+                            startdate="2020-10-31",
+                            enddate="2020-10-31")
 
     # Define position of boat
 
     lat_boat = lat_start
     lon_boat = lon_start
 
-    lat_boat_test, lon_boat_test = travel(distance,lat_route,lon_route)
+    lat_boat_test, lon_boat_test = travel(distance, lat_route, lon_route)
 
     # Create plot
 
