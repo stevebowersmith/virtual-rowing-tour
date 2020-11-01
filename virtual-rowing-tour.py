@@ -23,10 +23,26 @@ def kml2latlon(ifile):
 
     return lat, lon
 
-def read_logbook(ifile, startdate = None, enddate = None):
-    """ ToDo: Write reader for logbook to return distance in m rowed between start and end date"""
+
+def read_logbook(ifile, startdate=None, enddate=None):
+    """ ToDo: Write reader for logbook to return distance in m
+        rowed between start and end date"""
     distance = 15000
+
     return distance
+
+
+def coords2d(lat, lon):
+    import shapely
+    import numpy as np
+    from cartopy import geodesic
+
+    latlon = tuple(zip(lat, lon))
+    myGeod = geodesic.Geodesic(6378137.0, 1/298.257223563)
+    shapelyObject = shapely.geometry.LineString(list(latlon))
+    s = myGeod.geometry_length(np.array(shapelyObject.coords))
+
+    return s
 
 
 def travel(distance, lat_route, lon_route):
@@ -38,19 +54,40 @@ def travel(distance, lat_route, lon_route):
 
     # total length of route
     latlon = tuple(zip(lat_route, lon_route))
-    myGeod = geodesic.Geodesic(6378137.0,1 / 298.257223563)
+    myGeod = geodesic.Geodesic(6378137.0, 1 / 298.257223563)
     shapelyObject = shapely.geometry.LineString(list(latlon))
     # calculate length of path on ellipsoid
     s = myGeod.geometry_length(np.array(shapelyObject.coords))
+    print("distance from start to finish is " + str(float(s)/1000.0) + " km")
 
-    print("distance from start to finish is " + str(float(s)/1000.0) + " km" )
+    # distance to each waypoint
+    s = 0.0     # distance for leg n-1 to n
+    s_vec = []  # distances for all legs
+    s_sum = []  # summed distances for all legs
+    for n in range(len(lat_route)):
+        if n == 0:
+            s = 0.0
+            s_vec.append(s)
+            s_sum.append(s)
+        else:
+            # row leg from waypoint n-1 to n
+            s = coords2d([lat_route[n-1], lat_route[n]],
+                         [lon_route[n-1], lon_route[n]])
+            s_vec.append(s)
+            s_sum.append(s + s_sum[n-1])
+        # print(n)
+        # print(s_vec[n])
+        # print(s_sum[n])
+        # print ("----")
 
-    # ToDo:
-    #  - Check if parameters for geoid are consitent with google earth  
-    #  - Calulate distance from the start position to each way point along the route
-    #  - Find last passed way point by comparing distance of waypoint with travled distance and return lon / lat
-    #  - Refine resulution of route / distance between the waypoints to avoid jumps  
-    
+    # ToDo: Find last passed way point by comparing distance of
+    #       waypoint with travled distance and return lon/lat
+
+    # ToDo: Find additional stretch rowed once the last waypoint was passed
+
+    # ToDo: Quality control (Check if parameters for geoid are consitent
+    #       with google earth, try different routes, ...)
+
     lat_pos = -999
     lon_pos = -888
 
@@ -59,11 +96,9 @@ def travel(distance, lat_route, lon_route):
 
 def main():
 
-    import matplotlib.pyplot as plt
-    
+    import matplotlib.pyplot as plt   
     import cartopy.crs as ccrs
     import cartopy.feature as cfeature
-    
     from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
 
     # Define start and finish
