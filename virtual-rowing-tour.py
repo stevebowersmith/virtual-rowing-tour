@@ -27,8 +27,11 @@ def kml2latlon(ifile):
 def read_logbook(ifile, startdate=None, enddate=None):
     """ ToDo: Write reader for logbook to return distance in m
         rowed between start and end date"""
-    distance = 218739
-
+    import pandas
+    df = pandas.read_csv('log/rowing.log',sep=' *; *')
+    distance = df['meter'].sum(axis=0)
+    print(distance)
+    
     return distance
 
 
@@ -197,7 +200,6 @@ def main():
     ax2.set_extent(extent2)
 
     #plt.show()
-    plt.savefig("plots/Exmouth_RC_virtual_row_winter_2020--2021.pdf")
     plt.savefig("plots/Exmouth_RC_virtual_row_winter_2020--2021.png")
 
 
