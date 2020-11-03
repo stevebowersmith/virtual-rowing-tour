@@ -3,9 +3,8 @@
 
 
 def kml2latlon(ifile):
-
     """Read lon lat from kml file with single path"""
-
+    
     from fastkml import kml, geometry
 
     with open(ifile, 'rt') as myfile:
@@ -27,15 +26,20 @@ def kml2latlon(ifile):
 def read_logbook(ifile, startdate=None, enddate=None):
     """ ToDo: Write reader for logbook to return distance in m
         rowed between start and end date"""
+    
     import pandas
+
     df = pandas.read_csv('log/rowing.log',sep=' *; *')
     distance = df['meter'].sum(axis=0)
+    last_date = df['date'].values[-1]
+    print(last_date)
     print(distance)
     
-    return distance
+    return distance, last_date
 
 
 def coords2d(lat, lon):
+    
     import shapely
     import numpy as np
     from cartopy import geodesic
@@ -50,10 +54,12 @@ def coords2d(lat, lon):
 
 def travel(distance, lat_route, lon_route):
     "ToDo: travel distance [m] along route and return position at destination"
+
     import shapely
     import numpy as np
     from cartopy import geodesic
     import sys
+    import datetime
 
     # total length of route
     latlon = tuple(zip(lat_route, lon_route))
@@ -64,15 +70,11 @@ def travel(distance, lat_route, lon_route):
     print("distance from start to finish is " + str(float(s)/1000.0) + " km")
 
     # distance to each waypoint
-    
     s = 0.0
-
     s_vec = np.empty(len(lat_route))
-    s_vec[:] = np.NaN
-    
     s_sum = np.empty(len(lat_route))
+    s_vec[:] = np.NaN
     s_sum[:] = np.NaN
-    
     for n in range(len(lat_route)):
         if n == 0:
             s = 0.0
@@ -84,7 +86,6 @@ def travel(distance, lat_route, lon_route):
                          [lon_route[n-1], lon_route[n]])
             s_vec[n] = s
             s_sum[n] = s + s_sum[n-1]
-
         # print(n)
         # print(s_vec[n])
         # print(s_sum[n])
@@ -95,7 +96,6 @@ def travel(distance, lat_route, lon_route):
     lon_pos = lon_route[0]
     for n in range(len(s_sum)):
         if s_sum[n] > distance:
-
             lat_pos = lat_route[n-1]
             lon_pos = lon_route[n-1]
             # distance traveled from last know position
@@ -133,18 +133,12 @@ def main():
 
     lat_route, lon_route = kml2latlon(ifile_kml)
 
-    lon_start = lon_route[0]
-    lat_start = lat_route[0]
-    lon_finish = lon_route[-1]
-    lat_finish = lat_route[-1]
-
-    # read traveled distance in m
-    distance = read_logbook("log/rowing.log",
-                            startdate="2020-10-31",
-                            enddate="2020-10-31")
+    distance, last_date = read_logbook("log/rowing.log",
+                                       startdate="2020-10-31",
+                                       enddate="2020-10-31")
 
     # Define position of boat
-
+    
     lat_boat, lon_boat = travel(distance, lat_route, lon_route)
 
     # Create plot
@@ -153,7 +147,7 @@ def main():
     extent2 = [-6, -2.5, 47.5, 51]
 
     fig = plt.figure(figsize=(10, 8))
-    fig.suptitle('Exmouth to La Gomera')
+    fig.suptitle('Exmouth to La Gomera ' + last_date)
 
     rivers_10m = cfeature.NaturalEarthFeature('physical',
                                               'rivers_lake_centerlines', '10m')
@@ -174,9 +168,9 @@ def main():
     ax1.xaxis.set_major_formatter(lon_formatter)
     ax1.set_yticks([25, 30, 35, 40, 45, 50])
     ax1.yaxis.set_major_formatter(lat_formatter)
-    ax1.plot(lon_start, lat_start, marker='o', color='blue',
+    ax1.plot(lon_route[0], lat_route[0], marker='o', color='blue',
              markersize=4, alpha=0.7, transform=ccrs.PlateCarree())
-    ax1.plot(lon_finish, lat_finish, marker='o', color='blue',
+    ax1.plot(lon_route[-1], lon_route[-1], marker='o', color='blue',
              markersize=4, alpha=0.7, transform=ccrs.PlateCarree())
     ax1.plot(lon_route, lat_route, ':', transform=ccrs.PlateCarree())
     ax1.plot(lon_boat, lat_boat, marker='o', color='red',
@@ -189,9 +183,9 @@ def main():
     ax2.xaxis.set_major_formatter(lon_formatter)
     ax2.set_yticks([25, 30, 35, 40, 45, 50])
     ax2.yaxis.set_major_formatter(lat_formatter)
-    ax2.plot(lon_start, lat_start, marker='o', color='blue',
+    ax2.plot(lon_route[0], lon_route[0], marker='o', color='blue',
              markersize=4, alpha=0.7, transform=ccrs.PlateCarree())
-    ax2.plot(lon_finish, lat_finish, marker='o', color='blue',
+    ax2.plot(lon_route[-1], lon_route[-1], marker='o', color='blue',
              markersize=4, alpha=0.7, transform=ccrs.PlateCarree())
     ax2.plot(lon_route, lat_route, ':', transform=ccrs.PlateCarree())
     ax2.plot(lon_boat, lat_boat, marker='o', color='red',
@@ -199,8 +193,8 @@ def main():
     ax2.set_title('Chart of the day')
     ax2.set_extent(extent2)
 
-    #plt.show()
-    plt.savefig("plots/Exmouth_RC_virtual_row_winter_2020--2021.png")
+    plt.show()
+    #plt.savefig("plots/Exmouth_RC_virtual_row_winter_2020--2021.png")
 
 
 if __name__ == "__main__":
