@@ -64,8 +64,8 @@ def travel(distance, lat_route, lon_route):
             s_sum[n] = s + s_sum[n-1]
     print("Total length of route " + str(s_sum[-1]))
 
-    # Find position of boat and the remaining distance 
-    # traveled  beyond last resolved waypoint 
+    # Find position of boat and the remaining distance
+    # traveled  beyond last resolved waypoint
     lat_pos = lat_route[0]
     lon_pos = lon_route[0]
     for n in range(len(s_sum)):
