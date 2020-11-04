@@ -81,7 +81,7 @@ def travel(distance, lat_route, lon_route):
     #        towards (lat_route[n],lon_route[n])
     #        and adjsut position (lat_pos, lon_pos) accordingly
 
-    return lat_pos, lon_pos
+    return lat_pos, lon_pos, s_sum[n-1], s_sum[-1]
 
 
 def main():
@@ -104,10 +104,11 @@ def main():
     distance, last_date = read_logbook("log/rowing.log",
                                        startdate="2020-10-31",
                                        enddate="2020-10-31")
-
+    first_date='2020-10-31'
+    
     # Define position of boat
     
-    lat_boat, lon_boat = travel(distance, lat_route, lon_route)
+    lat_boat, lon_boat, d1, d2 = travel(distance, lat_route, lon_route)
 
     # Create plot
 
@@ -115,7 +116,8 @@ def main():
     extent2 = [-6, -2.5, 47.5, 51]
 
     fig = plt.figure(figsize=(10, 8))
-    fig.suptitle('Exmouth to La Gomera ' + last_date)
+    fig.suptitle('Exmouth to La Gomera Row ' + '({:.0f} km)'.format(d2/1000.) + ' \n'
+                 + first_date + ' - ' + last_date )
 
     rivers_10m = cfeature.NaturalEarthFeature('physical',
                                               'rivers_lake_centerlines', '10m')
@@ -143,7 +145,7 @@ def main():
     ax1.plot(lon_route, lat_route, ':', transform=ccrs.PlateCarree())
     ax1.plot(lon_boat, lat_boat, marker='o', color='red',
              markersize=8, alpha=0.7, transform=ccrs.PlateCarree())
-    ax1.set_title('Expedition chart')
+    ax1.set_title('Distance from Exmouth: ' + '{:.0f} km'.format(d1/1000.))
 
     ax2 = fig.add_subplot(1, 2, 2, projection=ccrs.PlateCarree())
     ax2.add_feature(land_10m)
@@ -161,8 +163,8 @@ def main():
     ax2.set_title('Navigation chart')
     ax2.set_extent(extent2)
 
-    #plt.show()
-    plt.savefig("plots/Exmouth_RC_virtual_row_winter_2020--2021.png")
+    plt.show()
+    #plt.savefig("plots/Exmouth_RC_virtual_row_winter_2020--2021.png")
 
 
 if __name__ == "__main__":
