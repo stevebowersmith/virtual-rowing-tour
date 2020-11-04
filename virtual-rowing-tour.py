@@ -163,8 +163,8 @@ def main():
     ax2.set_title('Navigation chart')
     ax2.set_extent(extent2)
 
-    plt.show()
-    #plt.savefig("plots/Exmouth_RC_virtual_row_winter_2020--2021.png")
+    #plt.show()
+    plt.savefig("plots/Exmouth_RC_virtual_row_winter_2020--2021.png")
 
 
 if __name__ == "__main__":
