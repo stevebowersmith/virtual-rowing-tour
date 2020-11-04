@@ -38,38 +38,16 @@ def read_logbook(ifile, startdate=None, enddate=None):
     return distance, last_date
 
 
-def coords2d(lat, lon):
-    
-    import shapely
-    import numpy as np
-    from cartopy import geodesic
-
-    latlon = tuple(zip(lat, lon))
-    myGeod = geodesic.Geodesic(6378137.0, 1/298.257223563)
-    shapelyObject = shapely.geometry.LineString(list(latlon))
-    s = myGeod.geometry_length(np.array(shapelyObject.coords))
-
-    return s
-
-
 def travel(distance, lat_route, lon_route):
     "ToDo: travel distance [m] along route and return position at destination"
 
     import shapely
     import numpy as np
-    from cartopy import geodesic
     import sys
     import datetime
-
-    # total length of route
+    from geopy import distance as geodis
+    
     latlon = tuple(zip(lat_route, lon_route))
-    myGeod = geodesic.Geodesic(6378137.0, 1 / 298.257223563)
-    shapelyObject = shapely.geometry.LineString(list(latlon))
-    # calculate length of path on ellipsoid
-    s = myGeod.geometry_length(np.array(shapelyObject.coords))
-    print("distance from start to finish is " + str(float(s)/1000.0) + " km")
-
-    # distance to each waypoint
     s = 0.0
     s_vec = np.empty(len(lat_route))
     s_sum = np.empty(len(lat_route))
@@ -81,35 +59,27 @@ def travel(distance, lat_route, lon_route):
             s_vec[n] = s
             s_sum[n] = s
         else:
-            # row leg from waypoint n-1 to n
-            s = coords2d([lat_route[n-1], lat_route[n]],
-                         [lon_route[n-1], lon_route[n]])
+            s = geodis.distance(latlon[n], latlon[n-1]).m
             s_vec[n] = s
             s_sum[n] = s + s_sum[n-1]
-        # print(n)
-        # print(s_vec[n])
-        # print(s_sum[n])
-        # print ("----")
-        
-    # Find last passed waypoint
+    print("Total length of route " + str(s_sum[-1]))
+
+    # Find position of boat and the remaining distance 
+    # traveled  beyond last resolved waypoint 
     lat_pos = lat_route[0]
     lon_pos = lon_route[0]
     for n in range(len(s_sum)):
         if s_sum[n] > distance:
             lat_pos = lat_route[n-1]
             lon_pos = lon_route[n-1]
-            # distance traveled from last know position
             res = distance - s_sum[n-1]
-            # print(n)
-            # print(res)
-            # print(distance)
             break
-            
+
     # ToDo: Correct position by travelling the distance res
     #       from the last know position (lat_pos, lon_pps) 
-
-    # ToDo: Quality control (Check if parameters for geoid are consitent
-    #       with google earth, try different routes, ...)
+    # travel res from (lat_pos,lon_pos)
+    #        towards (lat_route[n],lon_route[n])
+    #        and adjsut position (lat_pos, lon_pos) accordingly
 
     return lat_pos, lon_pos
 
@@ -129,6 +99,7 @@ def main():
     # read planned route from kml file
 
     ifile_kml = "routes/route.kml"
+    #ifile_kml = "routes/Exmouth_La_Gomera.kml"
     # ifile_kml = "routes/shortcut.kml"
 
     lat_route, lon_route = kml2latlon(ifile_kml)
