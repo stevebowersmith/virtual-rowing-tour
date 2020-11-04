@@ -97,10 +97,7 @@ def main():
     name_finish = "La Gomera"
 
     # read planned route from kml file
-
-    ifile_kml = "routes/route.kml"
-    #ifile_kml = "routes/Exmouth_La_Gomera.kml"
-    # ifile_kml = "routes/shortcut.kml"
+    ifile_kml = "routes/Exmouth_La_Gomera.kml"
 
     lat_route, lon_route = kml2latlon(ifile_kml)
 
@@ -141,7 +138,7 @@ def main():
     ax1.yaxis.set_major_formatter(lat_formatter)
     ax1.plot(lon_route[0], lat_route[0], marker='o', color='blue',
              markersize=4, alpha=0.7, transform=ccrs.PlateCarree())
-    ax1.plot(lon_route[-1], lon_route[-1], marker='o', color='blue',
+    ax1.plot(lon_route[-1], lat_route[-1], marker='o', color='blue',
              markersize=4, alpha=0.7, transform=ccrs.PlateCarree())
     ax1.plot(lon_route, lat_route, ':', transform=ccrs.PlateCarree())
     ax1.plot(lon_boat, lat_boat, marker='o', color='red',
@@ -150,22 +147,22 @@ def main():
 
     ax2 = fig.add_subplot(1, 2, 2, projection=ccrs.PlateCarree())
     ax2.add_feature(land_10m)
-    ax2.set_xticks([-20, -15, -10, -5, 0, 5])
+    ax2.set_xticks([-20, -15, -10, -6, -5, -4, -3, 0, 5])
     ax2.xaxis.set_major_formatter(lon_formatter)
-    ax2.set_yticks([25, 30, 35, 40, 45, 50])
+    ax2.set_yticks([25, 30, 35, 40, 45, 46, 47, 48, 49, 50, 51])
     ax2.yaxis.set_major_formatter(lat_formatter)
-    ax2.plot(lon_route[0], lon_route[0], marker='o', color='blue',
+    ax2.plot(lon_route[0], lat_route[0], marker='o', color='blue',
              markersize=4, alpha=0.7, transform=ccrs.PlateCarree())
-    ax2.plot(lon_route[-1], lon_route[-1], marker='o', color='blue',
+    ax2.plot(lon_route[-1], lat_route[-1], marker='o', color='blue',
              markersize=4, alpha=0.7, transform=ccrs.PlateCarree())
     ax2.plot(lon_route, lat_route, ':', transform=ccrs.PlateCarree())
     ax2.plot(lon_boat, lat_boat, marker='o', color='red',
              markersize=8, alpha=0.7, transform=ccrs.PlateCarree())
-    ax2.set_title('Chart of the day')
+    ax2.set_title('Navigation chart')
     ax2.set_extent(extent2)
 
-    plt.show()
-    #plt.savefig("plots/Exmouth_RC_virtual_row_winter_2020--2021.png")
+    #plt.show()
+    plt.savefig("plots/Exmouth_RC_virtual_row_winter_2020--2021.png")
 
 
 if __name__ == "__main__":
