@@ -10,6 +10,8 @@ The [log book](https://github.com/BHFock/erc_to_la_gomera_row/blob/main/log/rowi
 
 The required Python packages can be installed via https://www.anaconda.com
 
-> conda install -c conda-forge cartopy
-> conda install -c conda-forge fastkml
-> conda install -c conda-forge geopy
+ conda install -c conda-forge cartopy
+
+ conda install -c conda-forge fastkml
+ 
+ conda install -c conda-forge geopy
