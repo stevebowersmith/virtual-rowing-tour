@@ -113,7 +113,7 @@ def main():
     # Create plot
 
     extent1 = [-20, 2.5, 25, 52.5]
-    extent2 = [-6, -2.5, 47.5, 51]
+    extent2 = [-6,   -2, 47.25, 51]
 
     fig = plt.figure(figsize=(10, 8))
     fig.suptitle('Exmouth to La Gomera Row ' + '({:.0f} km)'.format(d2/1000.) + ' \n'
@@ -133,10 +133,9 @@ def main():
     ax1.set_extent(extent1, crs=ccrs.PlateCarree())
     # ax1.coastlines(resolution='50m')
     ax1.add_feature(land_10m)
-    # ax1.add_feature(rivers_10m, facecolor='None', edgecolor='b', alpha=0.5)
     ax1.set_xticks([-20, -15, -10, -5, 0, 5])
-    ax1.xaxis.set_major_formatter(lon_formatter)
     ax1.set_yticks([25, 30, 35, 40, 45, 50])
+    ax1.xaxis.set_major_formatter(lon_formatter)
     ax1.yaxis.set_major_formatter(lat_formatter)
     ax1.plot(lon_route[0], lat_route[0], marker='o', color='blue',
              markersize=4, alpha=0.7, transform=ccrs.PlateCarree())
