@@ -24,16 +24,11 @@ def kml2latlon(ifile):
 
 
 def read_logbook(ifile, startdate=None, enddate=None):
-    """ ToDo: Write reader for logbook to return distance in m
-        rowed between start and end date"""
-    
     import pandas
 
     df = pandas.read_csv('log/rowing.log',sep=' *; *')
     distance = df['meter'].sum(axis=0)
     last_date = df['date'].values[-1]
-    print(last_date)
-    print(distance)
     
     return distance, last_date
 
