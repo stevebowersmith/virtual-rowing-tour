@@ -39,7 +39,7 @@ def main():
     
     proj = ccrs.PlateCarree()
 
-    fig = plt.figure(figsize=(10, 8))
+    fig = plt.figure(figsize=(16, 9))
     fig.suptitle(name_start + ' to ' + name_finish
                  + ' ({:.0f} km)'.format(d2/1000.) + ' \n'
                  + start_date + ' - ' + last_date)
