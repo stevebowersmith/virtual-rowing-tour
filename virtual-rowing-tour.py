@@ -1,77 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-
-def kml2latlon(ifile):
-    """Read lon lat from kml file with single path"""
-    from fastkml import kml, geometry
-
-    with open(ifile, 'rt') as myfile:
-        doc = myfile.read()
-    k = kml.KML()
-    k.from_string(doc.encode("utf-8"))
-    f = list(k.features())
-    g = list(f[0].features())[0].geometry
-
-    lat = []
-    lon = []
-    for c in g.coords:
-        lon.append(c[0])
-        lat.append(c[1])
-
-    return lat, lon
-
-
-def read_logbook(ifile, startdate=None, enddate=None):
-    import pandas
-
-    df = pandas.read_csv('log/rowing.log', sep=' *; *')
-
-    pandas.to_datetime(df['date'])
-    if startdate is not None and enddate is not None:
-        df = df.loc[(df['date'] > startdate) &
-                    (df['date'] <= enddate)]
-
-    distance = df['meter'].sum(axis=0)
-    last_date = df['date'].values[-1]
-
-    return distance, last_date
-
-
-def travel(distance, lat_route, lon_route):
-    import numpy as np
-    from geopy import distance as geodis
-
-    latlon = tuple(zip(lat_route, lon_route))
-    s_vec = np.empty(len(lat_route))
-    s_sum = np.empty(len(lat_route))
-    s_vec[:] = np.NaN
-    s_sum[:] = np.NaN
-    for n in range(len(lat_route)):
-        if n == 0:
-            s_vec[n] = 0.0
-            s_sum[n] = 0.0
-        else:
-            s_vec[n] = geodis.distance(latlon[n], latlon[n-1]).m
-            s_sum[n] = s_vec[n] + s_sum[n-1]
-
-    # Find position of boat and the remaining distance
-    # traveled  beyond last resolved waypoint
-    lat_pos = lat_route[0]
-    lon_pos = lon_route[0]
-    for n in range(len(s_sum)):
-        if s_sum[n] > distance:
-            lat_pos = lat_route[n-1]
-            lon_pos = lon_route[n-1]
-            res = distance - s_sum[n-1]
-            break
-
-    # ToDo: Correct position by travelling the distance res
-    #       from the last know position (lat_pos, lon_pps)
-
-    return lat_pos, lon_pos, s_sum[n-1], s_sum[-1], res
-
-
 def main():
 
     import matplotlib.pyplot as plt
@@ -79,12 +8,20 @@ def main():
     import cartopy.feature as cf
     from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
     import datetime as dt
+    import sys
+
+    sys.path.append(sys.path[0] + "/src")
+
+    from src import kml2latlon
+    from src import read_logbook
+    from src import travel
 
     name_start = "Exmouth"
     name_finish = "La Gomera"
     ifile_kml = "routes/Exmouth_La_Gomera.kml"
     start_date = '2020-10-31'
     final_date = dt.date.today().strftime("%Y-%m-%d")
+    date_2 = dt.datetime.strptime(final_date,'%Y-%m-%d') - dt.timedelta(days=1)
     
     lat_route, lon_route = kml2latlon(ifile_kml)
 
@@ -104,7 +41,7 @@ def main():
 
     fig = plt.figure(figsize=(10, 8))
     fig.suptitle(name_start + ' to ' + name_finish
-                 + '({:.0f} km)'.format(d2/1000.) + ' \n'
+                 + ' ({:.0f} km)'.format(d2/1000.) + ' \n'
                  + start_date + ' - ' + last_date)
 
     land_10m = cf.NaturalEarthFeature('physical',
@@ -118,7 +55,6 @@ def main():
     ax1 = fig.add_subplot(1, 2, 1, projection=proj)
 
     ax1.add_feature(land_10m)
-#    ax1.coastlines(resolution='10m',color='gray', alpha=0.7)
     ax1.set_xticks(xticks_1)
     ax1.set_yticks(yticks_1)
     ax1.set_extent(extent_1, crs=proj)
@@ -151,9 +87,9 @@ def main():
         
     d1 = dt.datetime.strptime(final_date,'%Y-%m-%d') - dt.timedelta(days=1)
     distance, _ = read_logbook("log/rowing.log",
-                         startdate=d1.strftime('%Y-%m-%d'),
+                         startdate=date_2.strftime('%Y-%m-%d'),
                          enddate=final_date)
-    ax2.set_title('Distance since ' + final_date + ": " +
+    ax2.set_title('Distance since ' + date_2.strftime("%Y-%m-%d") + ": " +
                   '{:.0f} km'.format(distance/1000.))
 
     ax2.set_extent(extent_2)
