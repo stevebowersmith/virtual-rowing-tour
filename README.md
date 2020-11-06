@@ -2,7 +2,7 @@
 
 ![plot](plots/Exmouth_RC_virtual_row_winter_2020--2021.png)
 
-## Loogbook 
+## Logbook 
 
 The [log book](https://github.com/BHFock/erc_to_la_gomera_row/blob/main/log/rowing.log) serves as input for the rowed meters.
 
