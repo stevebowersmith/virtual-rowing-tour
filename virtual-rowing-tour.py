@@ -9,6 +9,7 @@ def main():
     from cartopy.mpl.ticker import LongitudeFormatter, LatitudeFormatter
     import datetime as dt
     import sys
+    import math
 
     sys.path.append(sys.path[0] + "/src")
 
@@ -43,7 +44,9 @@ def main():
     xticks_1 = range(-180,180,5)
     yticks_1 = range(0,90,5)
 
-    extent_2 = [-6.25, -1.75, 46.25, 50.25]
+    # ToDo: Test if this works for all possible lon/lat positions - possible not!
+    extent_2 = [math.floor(lon_boat)-2.5, math.floor(lon_boat)+2.5,
+                math.floor(lat_boat)-2.5, math.floor(lat_boat)+2.5]
     xticks_2 = range(-20,5,1)
     yticks_2 = range(25,51,1)
     
