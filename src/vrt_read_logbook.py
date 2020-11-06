@@ -5,7 +5,7 @@
 def read_logbook(ifile, startdate=None, enddate=None):
     import pandas
 
-    df = pandas.read_csv(ifile, sep=' *; *')
+    df = pandas.read_csv(ifile, sep=' *; *', engine='python')
 
     pandas.to_datetime(df['date'])
     if startdate is not None and enddate is not None:
