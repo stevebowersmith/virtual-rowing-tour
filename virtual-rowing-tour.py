@@ -34,8 +34,7 @@ def main():
     lat_route, lon_route = kml2latlon(ifile_kml)
     s2, last_date = read_logbook(logbook)
     lat_boat, lon_boat, s_nm1, s_end, res = travel(s2, lat_route, lon_route)
-    s_dm1, _ = read_logbook("log/rowing.log", d1=date_2.strftime('%Y-%m-%d'),
-                            d2=final_date)
+    s_dm1, _ = read_logbook(logbook, d1=date_2.strftime('%Y-%m-%d'), d2=final_date)
     eta = vrt_eta(t1=start_date, t2=last_date, s2=s2, s3=s_end)
 
     # Plot data
