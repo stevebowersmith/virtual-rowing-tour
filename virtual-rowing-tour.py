@@ -10,6 +10,8 @@ def main():
     import datetime as dt
     import sys
     import math
+    import iris
+    import iris.plot as iplt
 
     sys.path.append(sys.path[0] + "/src")
 
@@ -23,13 +25,25 @@ def main():
     name_start = "Exmouth"
     name_finish = "La Gomera"
     ifile_kml = "routes/Exmouth_La_Gomera.kml"
+    extent_1 = [-20, 2.5, 25, 52.5]
+    lat_ext2 = 5.0
+    lon_ext2 = 5.0
+
+    #name_start = "Topsham"
+    #name_finish = "Turf via Stornoway"
+    #ifile_kml="routes/UK_Exeter-Stornoway-Exeter.kml"
+    #extent_1 = [-10.5, 2.5, 48, 60.5]
+    #lat_ext2 = 3.0
+    #lon_ext2 = 3.0
+
     start_date = dt.datetime(2020,10,31)
-    final_date = dt.date.today().strftime("%Y-%m-%d")
-    date_2 = dt.datetime.strptime(final_date,'%Y-%m-%d') - dt.timedelta(days=1)
-    d2 = dt.date.today()
     logbook = "log/rowing.log"
 
     # Read and calculate data
+
+    final_date = dt.date.today().strftime("%Y-%m-%d")
+    date_2 = dt.datetime.strptime(final_date,'%Y-%m-%d') - dt.timedelta(days=1)
+    d2 = dt.date.today()
     
     lat_route, lon_route = kml2latlon(ifile_kml)
     s2, last_date = read_logbook(logbook)
@@ -38,16 +52,16 @@ def main():
     eta = vrt_eta(t1=start_date, t2=last_date, s2=s2, s3=s_end)
 
     # Plot data
-
-    extent_1 = [-20, 2.5, 25, 52.5]
+    
     xticks_1 = range(-180,180,5)
     yticks_1 = range(0,90,5)
 
     # ToDo: Test if this works for all possible lon/lat positions - possible not!
-    extent_2 = [math.floor(lon_boat)-2.5, math.floor(lon_boat)+2.5,
-                math.floor(lat_boat)-2.5, math.floor(lat_boat)+2.5]
-    xticks_2 = range(-20,5,1)
-    yticks_2 = range(25,51,1)
+    extent_2 = [math.floor(lon_boat)-0.5*lon_ext2, math.floor(lon_boat)+0.5*lon_ext2,
+                math.floor(lat_boat)-0.5*lat_ext2, math.floor(lat_boat)+0.5*lat_ext2]
+
+    xticks_2 = range(-180,180,1)
+    yticks_2 = range(-90,90,1)
     
     proj = ccrs.PlateCarree()
 
@@ -80,7 +94,6 @@ def main():
     ax1.plot(lon_route, lat_route, ':', linewidth=2, transform=proj)
     ax1.plot(lon_boat, lat_boat, marker='o', color='red',
              markersize=8, alpha=0.7, transform=proj)
-
     ax1.set_title('Distance from ' + name_start + ': '
                   + '{:.0f} km \n'.format((s_nm1+res)/1000.)
                   + 'Estimated time of arrival: '
