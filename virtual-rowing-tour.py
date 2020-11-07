@@ -22,22 +22,52 @@ def main():
 
     # User input
 
-    name_start = "Exmouth"
-    name_finish = "La Gomera"
-    ifile_kml = "routes/Exmouth_La_Gomera.kml"
-    extent_1 = [-20, 2.5, 25, 52.5]
-    lat_ext2 = 5.0
-    lon_ext2 = 5.0
-
-    #name_start = "Topsham"
-    #name_finish = "Turf via Stornoway"
-    #ifile_kml="routes/UK_Exeter-Stornoway-Exeter.kml"
-    #extent_1 = [-10.5, 2.5, 48, 60.5]
-    #lat_ext2 = 3.0
-    #lon_ext2 = 3.0
-
     start_date = dt.datetime(2020,10,31)
     logbook = "log/rowing.log"
+    #tour="Hamburg_to_Copenhagen"
+    #tour="UK_Exeter-Stornoway-Exeter"
+    tour="Exmouth_to_La_Gomera"
+
+    if tour == "Exmouth_to_La_Gomera":
+        name_start = "Exmouth"
+        name_finish = "La Gomera"
+        ifile_kml = "routes/Exmouth_La_Gomera.kml"
+        xtick_inc_1 = 5
+        ytick_inc_1 = 5
+        extent_1 = [-20, 2.5, 25, 52.5]
+        lat_ext2 = 5.0
+        lon_ext2 = 5.0
+        coast_alpha = [0.7, 0.7]
+    elif tour == "UK_Exeter-Stornoway-Exeter":
+        name_start = "Topsham"
+        name_finish = "Turf via Stornoway"
+        ifile_kml="routes/UK_Exeter-Stornoway-Exeter.kml"
+        extent_1 = [-10.5, 2.5, 48, 60.5]
+        xtick_inc_1 = 5
+        ytick_inc_1 = 5
+        lat_ext2 = 3.0
+        lon_ext2 = 3.0
+        coast_alpha = [0.0, 0.7]
+    elif tour == "Hamburg_to_Copenhagen":
+        name_start = "Hamburg"
+        name_finish = "Copenhagen"
+        ifile_kml="routes/Hamburg_to_Copenhagen_1250_km.kml"
+        extent_1 = [6.5, 13.5, 52.5, 57.999]
+        lat_ext2 = 3.0
+        lon_ext2 = 3.0
+        xtick_inc_1 = 2
+        ytick_inc_1 = 2
+        coast_alpha = [0.7, 0.7]
+    else:
+        name_start = "???"
+        name_finish = "???"
+        ifile_kml="???.kml"
+        extent_1 = [None, None, None, None]
+        lat_ext2 = None
+        lon_ext2 = None
+        xtick_inc_1 = None
+        ytick_inc_1 = None
+        coast_alpha = [None, None]
 
     # Read and calculate data
 
@@ -53,8 +83,8 @@ def main():
 
     # Plot data
     
-    xticks_1 = range(-180,180,5)
-    yticks_1 = range(0,90,5)
+    xticks_1 = range(-180,180,xtick_inc_1)
+    yticks_1 = range(0,90,xtick_inc_1)
 
     # ToDo: Test if this works for all possible lon/lat positions - possible not!
     extent_2 = [math.floor(lon_boat)-0.5*lon_ext2, math.floor(lon_boat)+0.5*lon_ext2,
@@ -81,6 +111,7 @@ def main():
     ax1 = fig.add_subplot(1, 2, 1, projection=proj)
 
     ax1.add_feature(land_10m)
+    ax1.coastlines(resolution='10m', color='gray', alpha=coast_alpha[0])
     ax1.set_xticks(xticks_1)
     ax1.set_yticks(yticks_1)
     ax1.set_extent(extent_1, crs=proj)
@@ -102,7 +133,7 @@ def main():
     ax2 = fig.add_subplot(1, 2, 2, projection=proj)
 
     ax2.add_feature(land_10m)
-    ax2.coastlines(resolution='10m',color='gray', alpha=0.7)
+    ax2.coastlines(resolution='10m',color='gray', alpha=coast_alpha[1])
     ax2.set_xticks(xticks_2)
     ax2.set_yticks(yticks_2)
     ax2.set_extent(extent_2)
